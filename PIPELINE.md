@@ -4,7 +4,7 @@ This document describes a pipeline for solving a two-phase bi-level
 optimization problem for reconfigurable manufacturing system (RMS)
 configuration design: enumerate candidate machine configurations, solve a
 lower-level hybrid-flowshop scheduling problem for each, select a
-near-optimal-cost corridor, and pick the most *flexible* configuration
+near-optimal-cost corridor, and pick the most flexible configuration
 within that corridor.
 
 It explains what the code does, how it is
