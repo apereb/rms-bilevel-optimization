@@ -1,0 +1,8 @@
+[Recompute] loading scheduling results from runs/r1/partial/period1_partial.meta.json -- Gurobi is never called in this mode
+[Recompute] using alpha=5  epsilon=0.15  tau=3  lambda=0.5  mu=0.4  delta=0.1
+----------------------------------------------------------------
+[Result] C* = 24.3733
+[Result] threshold = (1+eps)*C* = 28.0293
+[Result] corridor size = 156 / 907 scheduled
+[Result] Phase-2 winner: config_idx=162  s0->m2k2x3 | s1->m4k2x3 | s2->m2k3x2 | s3->m3k2x3 | s4->m1k1x1
+    total_cost=27.9333  Q=24.5000  Theta=3.2258  Phi=3.1895

@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "mode": "recompute",
+    "started_at": "2026-09-16 10:26:50",
+    "nb_stages": 5,
+    "nb_jobs": 3,
+    "N_max": 3,
+    "K": 20,
+    "alpha": 5,
+    "epsilon": 0.15,
+    "tau": 3,
+    "lambda_coef": 0.5,
+    "mu_coef": 0.4,
+    "delta_coef": 0.1,
+    "source_run_json": "runs/r1/partial/period1_partial.meta.json"
+  },
+  "summary": {
+    "finished_at": "2026-09-16 10:26:50",
+    "C_star": 24.373333333333335,
+    "threshold": 28.029333333333334,
+    "corridor_size": 156,
+    "phase2_best_config_idx": 162,
+    "phase2_best_y": [
+      {
+        "stage": 0,
+        "machine_id": 2,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 1.21,
+        "capable_ops": [
+          0,
+          2,
+          13,
+          15
+        ],
+        "modules": [
+          11,
+          15,
+          19
+        ]
+      },
+      {
+        "stage": 1,
+        "machine_id": 4,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 2.02,
+        "capable_ops": [
+          0,
+          1,
+          12,
+          17,
+          20
+        ],
+        "modules": [
+          10,
+          15,
+          16,
+          20,
+          24
+        ]
+      },
+      {
+        "stage": 2,
+        "machine_id": 2,
+        "config_id": 3,
+        "n_machines": 2,
+        "setup_cost": 2.0,
+        "capable_ops": [
+          0,
+          3,
+          8,
+          11,
+          17
+        ],
+        "modules": [
+          15,
+          19,
+          23
+        ]
+      },
+      {
+        "stage": 3,
+        "machine_id": 3,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 2.52,
+        "capable_ops": [
+          0,
+          1,
+          4,
+          8,
+          11,
+          15,
+          17,
+          19
+        ],
+        "modules": [
+          11,
+          12,
+          15,
+          16,
+          19,
+          21
+        ]
+      },
+      {
+        "stage": 4,
+        "machine_id": 1,
+        "config_id": 1,
+        "n_machines": 1,
+        "setup_cost": 0.85,
+        "capable_ops": [
+          0,
+          4,
+          8,
+          12,
+          16
+        ],
+        "modules": [
+          12,
+          17,
+          20,
+          22
+        ]
+      }
+    ]
+  },
+  "configs_file": "period1_partial_v2.configs.jsonl"
+}

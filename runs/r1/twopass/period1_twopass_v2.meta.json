@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "mode": "recompute",
+    "started_at": "2026-09-16 10:27:00",
+    "nb_stages": 5,
+    "nb_jobs": 3,
+    "N_max": 3,
+    "K": 20,
+    "alpha": 5,
+    "epsilon": 0.15,
+    "tau": 3,
+    "lambda_coef": 0.5,
+    "mu_coef": 0.4,
+    "delta_coef": 0.1,
+    "source_run_json": "runs/r1/twopass/period1_twopass.meta.json"
+  },
+  "summary": {
+    "finished_at": "2026-09-16 10:27:00",
+    "C_star": 23.978095238095086,
+    "threshold": 27.574809523809346,
+    "corridor_size": 527,
+    "phase2_best_config_idx": 1419,
+    "phase2_best_y": [
+      {
+        "stage": 0,
+        "machine_id": 2,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 1.21,
+        "capable_ops": [
+          0,
+          2,
+          13,
+          15
+        ],
+        "modules": [
+          11,
+          15,
+          19
+        ]
+      },
+      {
+        "stage": 1,
+        "machine_id": 4,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 2.02,
+        "capable_ops": [
+          0,
+          1,
+          12,
+          17,
+          20
+        ],
+        "modules": [
+          10,
+          15,
+          16,
+          20,
+          24
+        ]
+      },
+      {
+        "stage": 2,
+        "machine_id": 5,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 1.53,
+        "capable_ops": [
+          0,
+          3,
+          5,
+          10,
+          17,
+          20
+        ],
+        "modules": [
+          14,
+          18,
+          19,
+          22,
+          25
+        ]
+      },
+      {
+        "stage": 3,
+        "machine_id": 2,
+        "config_id": 3,
+        "n_machines": 3,
+        "setup_cost": 2.0,
+        "capable_ops": [
+          0,
+          3,
+          8,
+          11,
+          17
+        ],
+        "modules": [
+          15,
+          19,
+          23
+        ]
+      },
+      {
+        "stage": 4,
+        "machine_id": 2,
+        "config_id": 2,
+        "n_machines": 1,
+        "setup_cost": 1.21,
+        "capable_ops": [
+          0,
+          2,
+          13,
+          15
+        ],
+        "modules": [
+          11,
+          15,
+          19
+        ]
+      }
+    ]
+  },
+  "configs_file": "period1_twopass_v2.configs.jsonl"
+}

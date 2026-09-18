@@ -1,0 +1,8 @@
+[Recompute] loading scheduling results from runs/r1/twopass/period1_twopass.meta.json -- Gurobi is never called in this mode
+[Recompute] using alpha=5  epsilon=0.15  tau=3  lambda=0.5  mu=0.4  delta=0.1
+----------------------------------------------------------------
+[Result] C* = 23.9781
+[Result] threshold = (1+eps)*C* = 27.5748
+[Result] corridor size = 527 / 3024 scheduled
+[Result] Phase-2 winner: config_idx=1419  s0->m2k2x3 | s1->m4k2x3 | s2->m5k2x3 | s3->m2k3x3 | s4->m2k2x1
+    total_cost=27.4424  Q=25.0000  Theta=3.6159  Phi=3.1409
