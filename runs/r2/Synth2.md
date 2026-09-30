@@ -31,7 +31,7 @@
 
 ### Partial-inversion
 
-Contrairement à ce qu'on observe sur d'autres instances, le gagnant de la baseline (`199`) fait bien partie du corridor retrouvé par `partial-inversion` — l'heuristique n'a pas ici conduit à une divergence de décision. Elle reste néanmoins coûteuse en couverture : seuls 12.7% du corridor réel sont retrouvés (Jaccard=0.127), et le gagnant propre à `partial-inversion` (`1757`) a un coût supérieur de 16.5% au véritable optimum.
+Contrairement à ce qu'on observe sur d'autres instances, le gagnant de la baseline (`199`) fait bien partie du corridor retrouvé par `partial-inversion`, l'heuristique n'a pas ici conduit à une divergence de décision. Elle reste néanmoins coûteuse en couverture : seuls 12.7% du corridor réel sont retrouvés (Jaccard=0.127), et le gagnant propre à `partial-inversion` (`1757`) a un coût supérieur de 16.5% au véritable optimum.
 
 ### Classement
 

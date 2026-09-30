@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "mode": "lb-exact",
+    "started_at": "2026-09-30 13:57:37",
+    "nb_stages": 5,
+    "nb_jobs": 3,
+    "N_max": 3,
+    "K": 20,
+    "alpha": 5,
+    "epsilon": 0.15,
+    "tau": 3,
+    "lambda_coef": 0.5,
+    "mu_coef": 0.4,
+    "delta_coef": 0.1,
+    "time_limit_per_config": 15,
+    "complete_corridor": false,
+    "lb_margin": 0.0001
+  },
+  "summary": {
+    "finished_at": "2026-09-30 14:02:28",
+    "C_star": 23.978095238095086,
+    "threshold": 27.574809523809346,
+    "corridor_size": 15,
+    "phase2_best_config_idx": 1419,
+    "phase2_best_y": [
+      {
+        "stage": 0,
+        "machine_id": 2,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 1.21,
+        "capable_ops": [
+          0,
+          2,
+          13,
+          15
+        ],
+        "modules": [
+          11,
+          15,
+          19
+        ]
+      },
+      {
+        "stage": 1,
+        "machine_id": 4,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 2.02,
+        "capable_ops": [
+          0,
+          1,
+          12,
+          17,
+          20
+        ],
+        "modules": [
+          10,
+          15,
+          16,
+          20,
+          24
+        ]
+      },
+      {
+        "stage": 2,
+        "machine_id": 5,
+        "config_id": 2,
+        "n_machines": 3,
+        "setup_cost": 1.53,
+        "capable_ops": [
+          0,
+          3,
+          5,
+          10,
+          17,
+          20
+        ],
+        "modules": [
+          14,
+          18,
+          19,
+          22,
+          25
+        ]
+      },
+      {
+        "stage": 3,
+        "machine_id": 2,
+        "config_id": 3,
+        "n_machines": 3,
+        "setup_cost": 2.0,
+        "capable_ops": [
+          0,
+          3,
+          8,
+          11,
+          17
+        ],
+        "modules": [
+          15,
+          19,
+          23
+        ]
+      },
+      {
+        "stage": 4,
+        "machine_id": 2,
+        "config_id": 2,
+        "n_machines": 1,
+        "setup_cost": 1.21,
+        "capable_ops": [
+          0,
+          2,
+          13,
+          15
+        ],
+        "modules": [
+          11,
+          15,
+          19
+        ]
+      }
+    ],
+    "n_universe": 3024,
+    "n_solved": 19,
+    "n_anchor_solves": 14,
+    "n_eligible": 703,
+    "n_solves_at_first_hit": 19,
+    "walk_hit_config_idx": 1419,
+    "complete_corridor": false,
+    "lb_margin": 0.0001,
+    "t_phi_s": 1.7637848854064941,
+    "t_lb_s": 0.6042642593383789,
+    "t_solve_s": 288.82477259635925,
+    "t_total_s": 291.20217633247375
+  },
+  "configs_file": "period1_lbexact.configs.jsonl"
+}

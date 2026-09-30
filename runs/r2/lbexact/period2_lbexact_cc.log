@@ -1,0 +1,31 @@
+[LB-exact] 3990 feasible config(s)
+[LB-exact] Phi over the full universe: 1.8s
+[LB-exact] LB_cost for the full universe: 0.7s
+  [anchor    1] config_idx=0  LB_cost=31.8976  total_cost=32.1881  Phi=4.5491  Cmax=18.2  [TIME_LIMIT]
+[LB-exact] anchor: 1 solve(s) -> C* = 32.1881, threshold = 37.0163
+[LB-exact] LB-eligible set E: 375/3990 config(s) (9.4%)
+  [walk    2] config_idx=105  LB_cost=36.9340  total_cost=37.2376  Phi=6.4571  Cmax=17.0  [TIME_LIMIT]
+  [walk    3] config_idx=199  LB_cost=36.5129  total_cost=36.7176  Phi=6.4571  Cmax=17.0  [TIME_LIMIT]
+[LB-exact] first corridor member in decreasing-Phi order: config_idx=199 after 3 solve(s) in total
+  [walk    4] config_idx=1814  LB_cost=36.6329  total_cost=36.9567  Phi=6.4097  Cmax=17.5  [TIME_LIMIT]
+  [walk    5] config_idx=3714  LB_cost=36.9290  total_cost=37.2529  Phi=6.3967  Cmax=17.4  [TIME_LIMIT]
+  [walk    6] config_idx=142  LB_cost=36.5619  total_cost=36.7976  Phi=6.3872  Cmax=17.0  [TIME_LIMIT]
+  [walk    7] config_idx=123  LB_cost=36.5129  total_cost=36.7176  Phi=6.3556  Cmax=17.0  [TIME_LIMIT]
+  [walk    8] config_idx=1625  LB_cost=35.9940  total_cost=36.4167  Phi=6.3013  Cmax=17.5  [TIME_LIMIT]
+  [walk    9] config_idx=1719  LB_cost=35.1029  total_cost=35.4267  Phi=6.3013  Cmax=17.5  [TIME_LIMIT]
+  [walk   10] config_idx=1701  LB_cost=36.7690  total_cost=37.3643  Phi=6.2796  Cmax=18.8  [TIME_LIMIT]
+  [walk   11] config_idx=1795  LB_cost=35.9648  total_cost=36.0767  Phi=6.2796  Cmax=17.5  [TIME_LIMIT]
+  [walk   12] config_idx=2099  LB_cost=36.3390  total_cost=36.5438  Phi=6.2768  Cmax=16.9  [TIME_LIMIT]
+  [walk   13] config_idx=86  LB_cost=35.8876  total_cost=36.3043  Phi=6.2255  Cmax=18.8  [TIME_LIMIT]
+  [walk   14] config_idx=180  LB_cost=35.3748  total_cost=35.4867  Phi=6.2255  Cmax=17.5  [TIME_LIMIT]
+  [walk   15] config_idx=1658  LB_cost=36.9805  total_cost=37.5114  Phi=6.2175  Cmax=17.7  [TIME_LIMIT]
+  [walk   16] config_idx=1752  LB_cost=36.6986  total_cost=36.9867  Phi=6.2175  Cmax=17.5  [TIME_LIMIT]
+  [walk   17] config_idx=1662  LB_cost=35.6219  total_cost=35.9767  Phi=6.2154  Cmax=17.5  [TIME_LIMIT]
+  [walk   18] config_idx=1643  LB_cost=35.5729  total_cost=35.9824  Phi=6.1940  Cmax=17.9  [TIME_LIMIT]
+  [walk   19] config_idx=10  LB_cost=35.2376  total_cost=35.6138  Phi=6.1813  Cmax=18.6  [TIME_LIMIT]
+  [walk   20] config_idx=104  LB_cost=34.5129  total_cost=34.7176  Phi=6.1813  Cmax=17.0  [TIME_LIMIT]
+  [walk   21] config_idx=6  LB_cost=36.1976  total_cost=36.4881  Phi=6.1668  Cmax=18.2  [TIME_LIMIT]
+  [walk   22] config_idx=100  LB_cost=35.8940  total_cost=36.1976  Phi=6.1668  Cmax=17.0  [TIME_LIMIT]
+  [walk   23] config_idx=194  LB_cost=36.0595  total_cost=36.1976  Phi=6.1668  Cmax=17.0  [TIME_LIMIT]
+  [walk   24] config_idx=3695  LB_cost=36.2610  total_cost=36.6467  Phi=6.1594  Cmax=18.6  [TIME_LIMIT]
+  [walk   25] config_idx=82  LB_cost=36.8476  total_cost=37.2643  Phi=6.1374  Cmax=18.7  [TIME_LIMIT]

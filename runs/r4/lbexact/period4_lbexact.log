@@ -1,0 +1,29 @@
+[LB-exact] 31680 feasible config(s)
+[LB-exact] Phi over the full universe: 46.9s
+[LB-exact] LB_cost for the full universe: 5.3s
+  [anchor    1] config_idx=0  LB_cost=30.7912  total_cost=31.2376  Phi=1.3643  Cmax=23.1  [TIME_LIMIT]
+  [anchor    2] config_idx=220  LB_cost=30.8312  total_cost=31.2776  Phi=1.3421  Cmax=23.1  [TIME_LIMIT]
+  [anchor    3] config_idx=1  LB_cost=31.0460  total_cost=31.6638  Phi=1.4532  Cmax=21.3  [TIME_LIMIT]
+  [anchor    4] config_idx=221  LB_cost=31.0860  total_cost=31.7038  Phi=1.4309  Cmax=21.3  [TIME_LIMIT]
+  [anchor    5] config_idx=550  LB_cost=31.1512  total_cost=31.5976  Phi=1.3354  Cmax=23.1  [TIME_LIMIT]
+[LB-exact] anchor: 5 solve(s) -> C* = 31.2376, threshold = 35.9233
+[LB-exact] LB-eligible set E: 1664/31680 config(s) (5.3%)
+  [walk    6] config_idx=1433  LB_cost=35.8260  total_cost=36.3581  Phi=2.1987  Cmax=20.9  [TIME_LIMIT]
+  [walk    7] config_idx=8915  LB_cost=35.8862  total_cost=36.3100  Phi=2.1957  Cmax=19.5  [TIME_LIMIT]
+  [walk    8] config_idx=7923  LB_cost=35.6552  total_cost=36.2000  Phi=2.1744  Cmax=19.5  [TIME_LIMIT]
+  [walk    9] config_idx=1873  LB_cost=35.7460  total_cost=36.3638  Phi=2.1714  Cmax=21.3  [TIME_LIMIT]
+  [walk   10] config_idx=1435  LB_cost=35.3860  total_cost=35.9705  Phi=2.1590  Cmax=21.2  [TIME_LIMIT]
+  [walk   11] config_idx=8365  LB_cost=35.8162  total_cost=36.2400  Phi=2.1496  Cmax=19.5  [TIME_LIMIT]
+  [walk   12] config_idx=8143  LB_cost=35.6952  total_cost=36.2400  Phi=2.1459  Cmax=19.5  [TIME_LIMIT]
+  [walk   13] config_idx=7925  LB_cost=35.3362  total_cost=35.7600  Phi=2.1293  Cmax=19.5  [TIME_LIMIT]
+[LB-exact] first corridor member in decreasing-Phi order: config_idx=7925 after 13 solve(s) in total
+----------------------------------------------------------------
+[LB-exact] solved 13/31680 config(s) (0.0% of the universe)
+[LB-exact] time: total 252.2s = Phi 46.9s + LB 5.3s + solves 200.0s (+ writing/overhead 0.0s)
+[LB-exact] NOTE: corridor below is partial (only solved configs); use --complete-corridor to compare corridors with a baseline.
+----------------------------------------------------------------
+[Result] C* = 31.2376
+[Result] threshold = (1+eps)*C* = 35.9233
+[Result] corridor size = 6 / 13 scheduled
+[Result] Phase-2 winner: config_idx=7925  s0->m2k2x5 | s1->m2k1x5 | s2->m1k1x1 | s3->m2k3x5 | s4->m3k2x3
+    total_cost=35.7600  Q=19.5300  Theta=2.0191  Phi=2.1293

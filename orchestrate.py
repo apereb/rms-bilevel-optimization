@@ -44,6 +44,7 @@ Usage
     python orchestrate.py two-pass instance.json --time-limit 15 --refine-time-limit 60
     python orchestrate.py partial-inversion instance.json --phi-top-fraction 0.3
     python orchestrate.py recompute instance.json --run-json runs/run1.json --epsilon 0.2
+    python orchestrate.py lb-exact instance.json --time-limit 15 --output runs/lbexact
 """
 
 import argparse
@@ -55,6 +56,7 @@ from typing import Dict, List
 
 import config_space as cs
 import evaluation as ev
+import lower_bounds as lbd
 import scheduling as sch
 import structural as st
 
@@ -89,6 +91,7 @@ def finalize(
     phi: Dict[int, float],
     log: sch.RunLogger,
     writer: sch.JsonRunWriter = None,
+    extra_summary: dict = None,
 ) -> dict:
     """
     Run evaluation.evaluate(), log a human-readable summary, and persist
@@ -119,6 +122,7 @@ def finalize(
             "corridor_size": len(out["corridor"]),
             "phase2_best_config_idx": winner["config_idx"] if winner else None,
             "phase2_best_y": cs.config_to_dict(winner["y"]) if winner else None,
+            **(extra_summary or {}),
         })
 
     return out
@@ -353,6 +357,148 @@ def run_partial_inversion(instance: cs.RMSInstance, output_base: str,
     log.close()
     return out
 
+def run_lb_exact(instance, output_base, time_limit_per_config,
+                 complete_corridor=False, lb_margin=1e-4, verbose=True):
+    """
+    Exact selection with a lower-bound-anchored corridor (no phi_top_fraction).
+ 
+    1. Phi over the full universe, LB_cost(y) for every y      (no Gurobi).
+    2. Anchor: solve configs by increasing LB_cost, stop when the next
+       LB_cost >= best solved total_cost. `best` is then C* (over these
+       incumbents): every unsolved config has total_cost >= LB_cost >= best.
+    3. E = {y : LB_cost(y) <= (1+eps) C*} contains the whole corridor. Walk E
+       by decreasing Phi (ties: lowest config_idx, as evaluation's max() does
+       on an index-ordered list), solving each, and stop at the first config
+       with total_cost <= (1+eps) C*: it is argmax Phi over the corridor.
+    With complete_corridor=True, step 3 continues through all of E so that the
+    whole corridor is available for comparison with a baseline (Jaccard, rank
+    correlation); the winner is unchanged.
+ 
+    lb_margin (absolute, in cost units) absorbs the ~1e-5 level excess of
+    LB_Q over Q observed on real runs (solver tolerance / time-scale
+    rounding): a config is dropped by its bound only if LB_cost - lb_margin
+    is above the relevant value.
+    """
+    configs = cs.feasible_configs(instance)
+    ids = list(range(len(configs)))
+ 
+    log = sch.RunLogger(f"{output_base}.log" if output_base else None)
+    writer = sch.JsonRunWriter(
+        output_base,
+        meta=build_meta(instance, "lb-exact",
+                        time_limit_per_config=time_limit_per_config,
+                        complete_corridor=complete_corridor,
+                        lb_margin=lb_margin),
+    ) if output_base else None
+ 
+    t_start = time.time()
+    log.write(f"[LB-exact] {len(configs)} feasible config(s)")
+ 
+    # --- 1. structural + bounds, no Gurobi ---------------------------------
+    t0 = time.time()
+    theta, phi, _ = st.compute_measures(instance, configs, ids)
+    t_phi = time.time() - t0
+    log.write(f"[LB-exact] Phi over the full universe: {t_phi:.1f}s")
+ 
+    scheduled_jobs, batch_size = sch.build_scheduled_jobs(instance)
+    t0 = time.time()
+    lb_cost = lbd.cost_lower_bounds(instance, configs, scheduled_jobs, batch_size)
+    t_lb = time.time() - t0
+    log.write(f"[LB-exact] LB_cost for the full universe: {t_lb:.1f}s")
+ 
+    # --- solve-on-demand with a cache --------------------------------------
+    solved: Dict[int, dict] = {}
+    cost: Dict[int, float] = {}
+    t_solve = 0.0
+ 
+    def solve(idx: int, phase: str):
+        nonlocal t_solve
+        if idx in solved:
+            return
+        t1 = time.time()
+        res, _ = sch.schedule_configs(
+            instance, [configs[idx]], config_ids=[idx],
+            time_limit_per_config=time_limit_per_config,
+            logger=log, json_writer=writer, verbose=False,
+        )
+        t_solve += time.time() - t1
+        entry = res[0]
+        solved[idx] = entry
+        cost[idx] = ev.compute_total_cost([entry], instance.alpha)[idx]
+        if verbose:
+            status = entry["solve_info"]["status"]
+            flag = "" if status == "OPTIMAL" else f"  [{status}]"
+            log.write(f"  [{phase} {len(solved):4d}] config_idx={idx}  "
+                      f"LB_cost={lb_cost[idx]:.4f}  total_cost={cost[idx]:.4f}  "
+                      f"Phi={phi[idx]:.4f}  Cmax={entry['Q']:.1f}{flag}")
+ 
+    # --- 2. anchor: best-first in LB order ---------------------------------
+    order_lb = sorted(ids, key=lambda i: (lb_cost[i], i))
+    best = float("inf")
+    for i in order_lb:
+        if lb_cost[i] - lb_margin >= best:
+            break
+        solve(i, "anchor")
+        best = min(best, cost[i])
+    n_anchor = len(solved)
+    C_star = best
+    threshold = (1.0 + instance.epsilon) * C_star
+    log.write(f"[LB-exact] anchor: {n_anchor} solve(s) -> C* = {C_star:.4f}, "
+              f"threshold = {threshold:.4f}")
+ 
+    # --- 3. exact selection: walk E by decreasing Phi ----------------------
+    eligible = [i for i in ids if lb_cost[i] - lb_margin <= threshold]
+    eligible.sort(key=lambda i: (-phi[i], i))
+    log.write(f"[LB-exact] LB-eligible set E: {len(eligible)}/{len(ids)} config(s) "
+              f"({len(eligible) / len(ids):.1%})")
+ 
+    walk_hit = None
+    n_walk_to_hit = None
+    for i in eligible:
+        solve(i, "walk")
+        if walk_hit is None and cost[i] <= threshold:
+            walk_hit = i
+            n_walk_to_hit = len(solved)
+            log.write(f"[LB-exact] first corridor member in decreasing-Phi order: "
+                      f"config_idx={i} after {len(solved)} solve(s) in total")
+            if not complete_corridor:
+                break
+    if walk_hit is None:
+        log.write("[LB-exact] WARNING: no config of E lies inside the threshold "
+                  "(should not happen: the anchor config itself is in E).")
+ 
+    # Index-ordered results, so that evaluation's max() breaks Phi ties on the
+    # lowest config_idx exactly as in a baseline run.
+    results = [solved[i] for i in sorted(solved)]
+ 
+    t_total = time.time() - t_start
+    log.write("-" * 64)
+    log.write(f"[LB-exact] solved {len(results)}/{len(ids)} config(s) "
+              f"({len(results) / len(ids):.1%} of the universe)")
+    log.write(f"[LB-exact] time: total {t_total:.1f}s = Phi {t_phi:.1f}s + "
+              f"LB {t_lb:.1f}s + solves {t_solve:.1f}s "
+              f"(+ writing/overhead {t_total - t_phi - t_lb - t_solve:.1f}s)")
+    if not complete_corridor:
+        log.write("[LB-exact] NOTE: corridor below is partial (only solved configs); "
+                  "use --complete-corridor to compare corridors with a baseline.")
+ 
+    out = finalize(instance, results, theta, phi, log, writer, extra_summary={
+        "n_universe":        len(ids),
+        "n_solved":          len(results),
+        "n_anchor_solves":   n_anchor,
+        "n_eligible":        len(eligible),
+        "n_solves_at_first_hit": n_walk_to_hit,
+        "walk_hit_config_idx":   walk_hit,
+        "complete_corridor": complete_corridor,
+        "lb_margin":         lb_margin,
+        "t_phi_s":           t_phi,
+        "t_lb_s":            t_lb,
+        "t_solve_s":         t_solve,
+        "t_total_s":         t_total,
+    })
+    log.close()
+    return out
+
 
 # ---------------------------------------------------------------------------
 # Mode: recompute (no scheduling -- replacement for explore_phase2.py)
@@ -509,7 +655,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("mode", choices=["full", "two-pass", "partial-inversion",
-                                         "simulate-partial-inversion", "recompute"])
+                                         "simulate-partial-inversion", "lb-exact",
+                                         "recompute"])  
     parser.add_argument("instance_file")
     parser.add_argument("--output", dest="output_base", default=None,
                         help="Base path for <output>.log / <output>.json")
@@ -533,6 +680,13 @@ def main():
     parser.add_argument("--phi-top-fraction", type=float, default=0.3,
                         help="[partial-inversion] fraction of the feasible "
                              "universe to keep, ranked by Phi, before scheduling")
+    parser.add_argument("--complete-corridor", action="store_true",
+                        help="[lb-exact] keep solving all LB-eligible configs after "
+                             "the winner is found, so the whole corridor can be "
+                             "compared with a baseline")
+    parser.add_argument("--lb-margin", type=float, default=1e-4,
+                        help="[lb-exact] absolute margin (cost units) on the "
+                             "lower-bound comparisons")     
     parser.add_argument("--run-json", default=None,
                         help="[recompute] path to a previous run's JSON output")
     parser.add_argument("--alpha", type=float, default=None)
@@ -540,7 +694,7 @@ def main():
     parser.add_argument("--tau", type=float, default=None)
     parser.add_argument("--lambda-coef", dest="lambda_coef", type=float, default=None)
     parser.add_argument("--mu-coef", dest="mu_coef", type=float, default=None)
-    parser.add_argument("--delta-coef", dest="delta_coef", type=float, default=None)
+    parser.add_argument("--delta-coef", dest="delta_coef", type=float, default=None) 
 
     args = parser.parse_args()
 
@@ -561,6 +715,10 @@ def main():
             parser.error("simulate-partial-inversion requires --baseline-run")
         run_simulate_partial_inversion(instance, args.baseline_run,
                                        args.phi_top_fraction, args.output_base)
+    elif args.mode == "lb-exact":
+        run_lb_exact(instance, args.output_base, args.time_limit,
+                     complete_corridor=args.complete_corridor,
+                     lb_margin=args.lb_margin)        
     elif args.mode == "recompute":
         if not args.run_json:
             parser.error("recompute mode requires --run-json")

@@ -350,6 +350,16 @@ def alpha_sweep(instance: cs.RMSInstance, baseline_results: List[dict],
     Kendall on their cost values, reference vs current alpha) -- the same
     "does the ranking scramble" check as compare_baseline_vs_heuristic,
     just along the alpha axis instead of across methods.
+
+    Each row also reports the PHASE-1 winner: argmin total_cost over the
+    entire baseline universe, i.e. the config attaining C_star itself --
+    no extra evaluation needed, just tracking which config_idx realizes
+    that minimum. This is distinct from the Phase-2 winner already
+    tracked as winner_idx (argmax Phi within the corridor): the two
+    coincide only when the cheapest config also happens to maximize Phi
+    within its own corridor. Reporting both is what lets a caller (e.g.
+    plot_pareto) show how far Phase 2 actually moves the pick away from
+    a pure cost-minimizing choice, at every swept alpha.
     """
     ids = [r["config_idx"] for r in baseline_results]
     configs = [r["y"] for r in baseline_results]
@@ -370,6 +380,11 @@ def alpha_sweep(instance: cs.RMSInstance, baseline_results: List[dict],
         winner = ev.select_phase2_winner(corridor_entries, phi)
         w = by_idx[winner["config_idx"]] if winner else None
 
+        # Phase-1 winner: argmin total_cost over the WHOLE universe (not
+        # just the corridor). Ties broken by config_idx for determinism.
+        phase1_idx = min(ids, key=lambda i: (total_cost[i], i))
+        w1 = by_idx[phase1_idx]
+
         topk_a_set = set(sorted(ids, key=lambda i: total_cost[i])[:top_k])
         x = [ref_total_cost[i] for i in ref_topk_ids]
         y = [total_cost[i] for i in ref_topk_ids]
@@ -382,6 +397,10 @@ def alpha_sweep(instance: cs.RMSInstance, baseline_results: List[dict],
             "winner_C_config": w["C_config"] if w else None,
             "winner_Q": w["Q"] if w else None,
             "winner_perf": w["perf"] if w else None,
+            "phase1_winner_idx": phase1_idx,
+            "phase1_winner_C_config": w1["C_config"],
+            "phase1_winner_Q": w1["Q"],
+            "phase1_matches_phase2": (winner["config_idx"] == phase1_idx) if winner else None,
             "topk_jaccard_vs_ref": jaccard(ref_topk_set, topk_a_set),
             "topk_spearman_vs_ref": spearman_rho(x, y),
             "topk_kendall_vs_ref": kendall_tau(x, y),
@@ -414,12 +433,15 @@ def print_alpha_sweep_table(rows: List[dict], intervals: List[dict], context: di
     print(f"Reference alpha = {context['reference_alpha']:g}  "
           f"(top-{context['top_k']} stability measured against this)")
     print()
-    print("| alpha | C* | corridor_size | winner_idx | winner_C_config | winner_Q | "
+    print("| alpha | C* | corridor_size | winner_idx (P2) | winner_C_config | winner_Q | "
+          "phase1_winner_idx | phase1_C_config | phase1_Q | P1==P2 | "
           "topK_jaccard | topK_spearman | topK_kendall |")
-    print("|---|---|---|---|---|---|---|---|---|")
+    print("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     for r in rows:
         print(f"| {r['alpha']:g} | {r['C_star']:.4f} | {r['corridor_size']} | "
               f"{r['winner_idx']} | {r['winner_C_config']:.2f} | {r['winner_Q']:.2f} | "
+              f"{r['phase1_winner_idx']} | {r['phase1_winner_C_config']:.2f} | "
+              f"{r['phase1_winner_Q']:.2f} | {r['phase1_matches_phase2']} | "
               f"{r['topk_jaccard_vs_ref']:.3f} | {r['topk_spearman_vs_ref']:.3f} | "
               f"{r['topk_kendall_vs_ref']:.3f} |")
     print()
@@ -470,10 +492,21 @@ def plot_pareto(baseline_results: List[dict], frontier: List[Tuple[int, float, f
                 alpha_sweep_rows: Optional[List[dict]], output_png: str):
     """
     Scatter of every scheduled config on (C_config, Q), the Pareto
-    frontier connected as a line, and (if given) the winner at each swept
-    alpha overlaid as labeled markers -- visualizes exactly what alpha
-    trades off, and where each candidate winner sits relative to the
-    trade-off curve.
+    frontier connected as a line, and (if given) two overlaid
+    trajectories from the alpha sweep:
+      - Phase-2 winner (argmax Phi within the corridor) at each swept
+        alpha, as black dots -- the pipeline's actual pick.
+      - Phase-1 winner (argmin total_cost over the whole universe, i.e.
+        the config realizing C_star) at each swept alpha, as hollow
+        diamonds connected by a dashed line -- the pure cost-minimizing
+        trajectory Phase 2 departs from. Since total_cost is a linear
+        scalarization of (C_config, Q) at each alpha, this trajectory
+        always sits ON the Pareto frontier; the gap between it and the
+        Phase-2 (black dot) trajectory at the same alpha is exactly what
+        Phase 2's flexibility criterion is costing, in cost/makespan
+        terms, at that alpha.
+    Only one label per distinct config_idx is drawn per trajectory, even
+    if several alphas share the same winner.
     """
     import matplotlib
     matplotlib.use("Agg")
@@ -491,6 +524,8 @@ def plot_pareto(baseline_results: List[dict], frontier: List[Tuple[int, float, f
 
     if alpha_sweep_rows:
         by_idx = {r["config_idx"]: r for r in baseline_results}
+
+        # Phase-2 (actual pipeline) winners.
         seen = set()
         for row in alpha_sweep_rows:
             wid = row["winner_idx"]
@@ -500,7 +535,29 @@ def plot_pareto(baseline_results: List[dict], frontier: List[Tuple[int, float, f
             w = by_idx[wid]
             ax.annotate(f"a={row['alpha']:g}\n#{wid}", (w["C_config"], w["Q"]),
                        textcoords="offset points", xytext=(6, 6), fontsize=8, color="black")
-            ax.scatter([w["C_config"]], [w["Q"]], s=40, color="black", zorder=5)
+            ax.scatter([w["C_config"]], [w["Q"]], s=40, color="black", zorder=5,
+                      label="Phase-2 winner" if len(seen) == 1 else None)
+
+        # Phase-1 (pure cost-minimizing) winners, if this alpha_sweep_rows
+        # was produced by the extended alpha_sweep() that tracks them.
+        if alpha_sweep_rows and "phase1_winner_idx" in alpha_sweep_rows[0]:
+            p1_seen = set()
+            p1_points = []
+            for row in alpha_sweep_rows:
+                wid = row["phase1_winner_idx"]
+                w = by_idx[wid]
+                p1_points.append((w["C_config"], w["Q"]))
+                if wid in p1_seen:
+                    continue
+                p1_seen.add(wid)
+                ax.annotate(f"a={row['alpha']:g}\n#{wid}", (w["C_config"], w["Q"]),
+                           textcoords="offset points", xytext=(6, -12), fontsize=8,
+                           color="darkorange")
+            if p1_points:
+                p1_c = [c for c, _ in p1_points]
+                p1_q = [q for _, q in p1_points]
+                ax.scatter(p1_c, p1_q, s=50, facecolors="none", edgecolors="darkorange",
+                          marker="D", linewidths=1.5, zorder=5, label="Phase-1 winner")
 
     ax.set_xlabel("C_config (setup cost)")
     ax.set_ylabel("Q (makespan)")

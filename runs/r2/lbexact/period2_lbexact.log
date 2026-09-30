@@ -1,0 +1,39 @@
+[LB-exact] 3990 feasible config(s)
+[LB-exact] Phi over the full universe: 1.7s
+[LB-exact] LB_cost for the full universe: 0.7s
+  [anchor    1] config_idx=0  LB_cost=31.8976  total_cost=32.1881  Phi=4.5491  Cmax=18.2  [TIME_LIMIT]
+[LB-exact] anchor: 1 solve(s) -> C* = 32.1881, threshold = 37.0163
+[LB-exact] LB-eligible set E: 375/3990 config(s) (9.4%)
+  [walk    2] config_idx=105  LB_cost=36.9340  total_cost=37.4424  Phi=6.4571  Cmax=17.9  [TIME_LIMIT]
+  [walk    3] config_idx=199  LB_cost=36.5129  total_cost=36.7176  Phi=6.4571  Cmax=17.0  [TIME_LIMIT]
+[LB-exact] first corridor member in decreasing-Phi order: config_idx=199 after 3 solve(s) in total
+----------------------------------------------------------------
+[LB-exact] solved 3/3990 config(s) (0.1% of the universe)
+[LB-exact] time: total 48.1s = Phi 1.7s + LB 0.7s + solves 45.7s (+ writing/overhead 0.0s)
+[LB-exact] NOTE: corridor below is partial (only solved configs); use --complete-corridor to compare corridors with a baseline.
+----------------------------------------------------------------
+[Result] C* = 32.1881
+[Result] threshold = (1+eps)*C* = 37.0163
+[Result] corridor size = 2 / 3 scheduled
+[Result] Phase-2 winner: config_idx=199  s0->m2k2x5 | s1->m4k2x5 | s2->m2k3x3 | s3->m2k3x4 | s4->m3k2x1
+    total_cost=36.7176  Q=17.0000  Theta=3.5300  Phi=6.4571
+[LB-exact] 3990 feasible config(s)
+[LB-exact] Phi over the full universe: 2.4s
+[LB-exact] LB_cost for the full universe: 0.9s
+  [anchor    1] config_idx=0  LB_cost=31.8976  total_cost=32.2738  Phi=4.5491  Cmax=18.6  [TIME_LIMIT]
+  [anchor    2] config_idx=4  LB_cost=32.1976  total_cost=32.4881  Phi=5.4963  Cmax=18.2  [TIME_LIMIT]
+[LB-exact] anchor: 2 solve(s) -> C* = 32.2738, threshold = 37.1149
+[LB-exact] LB-eligible set E: 391/3990 config(s) (9.8%)
+  [walk    3] config_idx=105  LB_cost=36.9340  total_cost=37.2376  Phi=6.4571  Cmax=17.0  [TIME_LIMIT]
+  [walk    4] config_idx=199  LB_cost=36.5129  total_cost=36.7176  Phi=6.4571  Cmax=17.0  [TIME_LIMIT]
+[LB-exact] first corridor member in decreasing-Phi order: config_idx=199 after 4 solve(s) in total
+----------------------------------------------------------------
+[LB-exact] solved 4/3990 config(s) (0.1% of the universe)
+[LB-exact] time: total 64.3s = Phi 2.4s + LB 0.9s + solves 60.9s (+ writing/overhead 0.0s)
+[LB-exact] NOTE: corridor below is partial (only solved configs); use --complete-corridor to compare corridors with a baseline.
+----------------------------------------------------------------
+[Result] C* = 32.2738
+[Result] threshold = (1+eps)*C* = 37.1149
+[Result] corridor size = 3 / 4 scheduled
+[Result] Phase-2 winner: config_idx=199  s0->m2k2x5 | s1->m4k2x5 | s2->m2k3x3 | s3->m2k3x4 | s4->m3k2x1
+    total_cost=36.7176  Q=17.0000  Theta=3.5300  Phi=6.4571

@@ -1,0 +1,35 @@
+[LB-exact] 3024 feasible config(s)
+[LB-exact] Phi over the full universe: 1.8s
+[LB-exact] LB_cost for the full universe: 0.6s
+  [anchor    1] config_idx=324  LB_cost=23.4162  total_cost=23.9781  Phi=1.5209  Cmax=25.4  [TIME_LIMIT]
+  [anchor    2] config_idx=1188  LB_cost=23.4271  total_cost=24.0224  Phi=1.8992  Cmax=25.0  [TIME_LIMIT]
+  [anchor    3] config_idx=330  LB_cost=23.4562  total_cost=24.0181  Phi=1.5034  Cmax=25.4  [TIME_LIMIT]
+  [anchor    4] config_idx=1194  LB_cost=23.4671  total_cost=24.1481  Phi=1.8945  Cmax=25.4  [TIME_LIMIT]
+  [anchor    5] config_idx=339  LB_cost=23.7762  total_cost=24.3381  Phi=1.4005  Cmax=25.4  [TIME_LIMIT]
+  [anchor    6] config_idx=0  LB_cost=23.7781  total_cost=24.3733  Phi=2.3159  Cmax=24.5  [TIME_LIMIT]
+  [anchor    7] config_idx=1203  LB_cost=23.7871  total_cost=24.5538  Phi=1.7409  Cmax=25.7  [TIME_LIMIT]
+  [anchor    8] config_idx=6  LB_cost=23.8181  total_cost=24.4133  Phi=2.3159  Cmax=24.5  [TIME_LIMIT]
+  [anchor    9] config_idx=327  LB_cost=23.8862  total_cost=24.4481  Phi=1.5034  Cmax=25.4  [TIME_LIMIT]
+  [anchor   10] config_idx=336  LB_cost=23.8962  total_cost=24.4581  Phi=1.4459  Cmax=25.4  [TIME_LIMIT]
+  [anchor   11] config_idx=1191  LB_cost=23.8971  total_cost=24.6638  Phi=1.8945  Cmax=25.7  [TIME_LIMIT]
+  [anchor   12] config_idx=1200  LB_cost=23.9071  total_cost=24.6738  Phi=1.7937  Cmax=25.7  [TIME_LIMIT]
+  [anchor   13] config_idx=351  LB_cost=23.9662  total_cost=24.5281  Phi=1.5784  Cmax=25.4  [TIME_LIMIT]
+  [anchor   14] config_idx=1215  LB_cost=23.9771  total_cost=24.7438  Phi=1.9730  Cmax=25.7  [TIME_LIMIT]
+[LB-exact] anchor: 14 solve(s) -> C* = 23.9781, threshold = 27.5748
+[LB-exact] LB-eligible set E: 703/3024 config(s) (23.2%)
+  [walk   15] config_idx=162  LB_cost=27.3381  total_cost=27.9333  Phi=3.1895  Cmax=24.5  [TIME_LIMIT]
+  [walk   16] config_idx=1455  LB_cost=27.4371  total_cost=28.0324  Phi=3.1886  Cmax=25.0  [TIME_LIMIT]
+  [walk   17] config_idx=168  LB_cost=27.3781  total_cost=27.9733  Phi=3.1696  Cmax=24.5  [TIME_LIMIT]
+  [walk   18] config_idx=138  LB_cost=27.4481  total_cost=28.0433  Phi=3.1471  Cmax=24.5  [TIME_LIMIT]
+  [walk   19] config_idx=1419  LB_cost=26.8471  total_cost=27.4424  Phi=3.1409  Cmax=25.0  [TIME_LIMIT]
+[LB-exact] first corridor member in decreasing-Phi order: config_idx=1419 after 19 solve(s) in total
+----------------------------------------------------------------
+[LB-exact] solved 19/3024 config(s) (0.6% of the universe)
+[LB-exact] time: total 291.2s = Phi 1.8s + LB 0.6s + solves 288.8s (+ writing/overhead 0.0s)
+[LB-exact] NOTE: corridor below is partial (only solved configs); use --complete-corridor to compare corridors with a baseline.
+----------------------------------------------------------------
+[Result] C* = 23.9781
+[Result] threshold = (1+eps)*C* = 27.5748
+[Result] corridor size = 15 / 19 scheduled
+[Result] Phase-2 winner: config_idx=1419  s0->m2k2x3 | s1->m4k2x3 | s2->m5k2x3 | s3->m2k3x3 | s4->m2k2x1
+    total_cost=27.4424  Q=25.0000  Theta=3.6159  Phi=3.1409

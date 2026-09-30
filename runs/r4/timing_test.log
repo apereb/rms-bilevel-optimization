@@ -1,6 +1,0 @@
-[Full] TIMING TEST: 30/31680 feasible config(s), random sample (seed=42)
-[Full] NOTE: C*/corridor/winner below are only meaningful for this sample, not the full instance -- use this run to time a full run, not to draw conclusions about it.
-[Full] 0 feasible config(s)
-[Full] 0/0 config(s) did not reach a proven optimum within time_limit_per_config=15s
-[Full] TIMING TEST: 30/31680 feasible config(s), random sample (seed=42)
-[Full] NOTE: C*/corridor/winner below are only meaningful for this sample, not the full instance -- use this run to time a full run, not to draw conclusions about it.
