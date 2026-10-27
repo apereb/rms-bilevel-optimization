@@ -4,6 +4,8 @@
   "lambda_coef": 0.5,
   "mu_coef": 0.4,
   "delta_coef": 0.1,
+  "kappa_add": 1.5,
+  "kappa_rem": 1.0,
   "alpha": 5,
   "epsilon": 0.15,
   "tau": 3.0,

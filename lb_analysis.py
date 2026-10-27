@@ -36,9 +36,28 @@ def _stats(values: List[float]) -> str:
             f"/ max {max(values):.3f}")
 
 
+def _stub_gurobipy_if_missing() -> None:
+    """
+    Nothing here calls the solver, but scheduling.py imports gurobipy at module
+    level. If gurobipy is not installed (a machine without Gurobi), register a
+    minimal stand-in so that the import succeeds. Any attempt to actually solve
+    would fail, which is fine: these scripts only read baseline results.
+    """
+    try:
+        import gurobipy  # noqa: F401
+    except ImportError:
+        import sys
+        import types
+        stub = types.ModuleType("gurobipy")
+        stub.GRB = types.SimpleNamespace()
+        stub.Env = stub.Model = None
+        sys.modules["gurobipy"] = stub
+
+
 def lb_analysis(instance, baseline_results: List[dict],
                 eps_primes: List[float], phi_fractions: List[float],
                 ms: List[int], tol: float = 1e-3) -> None:
+    _stub_gurobipy_if_missing()
     import config_space as cs
     import evaluation as ev
     import scheduling as sched
@@ -216,6 +235,7 @@ def main():
                         help="absolute tolerance on LB_Q <= Q (MIP time-scale rounding)")
     args = parser.parse_args()
 
+    _stub_gurobipy_if_missing()
     import config_space as cs
     import orchestrate as orch
 

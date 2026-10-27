@@ -8,7 +8,7 @@
   "kappa_rem": 1.0,
   "alpha": 5,
   "epsilon": 0.15,
-  "tau": 3,
+  "tau": 3.0,
   "psi": 2.0,
   "K": 20,
   "jobs": [
